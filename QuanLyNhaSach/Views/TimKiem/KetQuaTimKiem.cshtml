@@ -1,0 +1,69 @@
+﻿@model IEnumerable<QuanLyNhaSach.Models.SACH>
+
+@{
+    ViewBag.Title = "Kết quả tìm kiếm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // Hàm trợ giúp để chuyển đổi giá trị checkbox thành văn bản
+    Func<string, string> GetPriceRangeText = (value) =>
+    {
+        switch (value)
+        {
+            case "1": return "0-10.000 VNĐ";
+            case "2": return "11.000-20.000 VNĐ";
+            case "3": return "21.000-40.000 VNĐ";
+            case "4": return "Lớn hơn 40.000 VNĐ";
+            default: return "";
+        }
+    };
+
+    // Lấy danh sách các khoảng giá đã chọn
+    var selectedPrices = (ViewBag.Gia as List<string>).Select(GetPriceRangeText).ToList();
+}
+
+<h2>KẾT QUẢ TÌM KIẾM</h2>
+
+<div class="alert alert-success">
+    <strong>Các tiêu chí tìm kiếm:</strong><br />
+    - Từ khóa: "<strong>@(string.IsNullOrEmpty(ViewBag.TuKhoa) ? "Tất cả" : ViewBag.TuKhoa)</strong>"<br />
+    - Chủ đề: "<strong>@ViewBag.TenChuDe</strong>"<br />
+    - Giá: "<strong>@(selectedPrices.Count > 0 ? string.Join(", ", selectedPrices) : "Tất cả")</strong>"
+</div>
+
+<hr />
+
+@if (ViewBag.ThongBao != null)
+{
+    <div class="alert alert-info">@ViewBag.ThongBao</div>
+}
+
+<div class="row">
+    @foreach (var sach in Model)
+    {
+        <div class="col-md-4 col-sm-6" style="margin-bottom: 20px;">
+            <div class="panel panel-default text-center">
+                <div class="panel-heading" style="height: 350px; padding: 10px;">
+                    <a href="@Url.Action("XemChiTiet", "Sach", new { id = sach.MASACH })">
+                        <img src="@Url.Content("~/Content/Images/" + sach.ANHBIA)"
+                             alt="@sach.TENSACH"
+                             class="img-responsive"
+                             style="max-height: 330px; margin: auto;" />
+                    </a>
+                </div>
+                <div class="panel-body" style="height: 100px; overflow: hidden;">
+                    @Html.ActionLink(sach.TENSACH, "XemChiTiet", "Sach", new { id = sach.MASACH }, new { @style = "font-weight: bold; text-decoration: none;" })
+                </div>
+                <div class="panel-footer">
+                    <div style="margin-bottom: 10px;">
+                        <span style="color: red; font-weight: bold; font-size: 1.2em;">
+                            @string.Format("{0:N0}", sach.GIABAN) VNĐ
+                        </span>
+                    </div>
+                    <a href="#" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-shopping-cart"></span> Thêm vào giỏ
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

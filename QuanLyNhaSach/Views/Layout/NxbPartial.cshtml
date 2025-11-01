@@ -1,0 +1,10 @@
+﻿@model IEnumerable<QuanLyNhaSach.Models.NHAXUATBAN>
+
+<ul class="list-group">
+    @foreach (var item in Model)
+    {
+        <li class="list-group-item">
+            @Html.ActionLink(item.TENNXB, "SachTheoNXB", "Sach", new { id = item.MANXB }, null)
+        </li>
+    }
+</ul>

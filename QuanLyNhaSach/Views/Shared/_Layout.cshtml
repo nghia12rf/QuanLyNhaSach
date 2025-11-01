@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Nhà Sách Trực Tuyến</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+        /* CSS tùy chỉnh để cải thiện giao diện */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-bg: #f8f9fa;
+            --border-color: #e7e7e7;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .site-header {
+            background-color: var(--light-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .brand {
+            color: var(--primary-color);
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .brand:hover {
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .sidebar {
+            background-color: var(--light-bg);
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar h4 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 8px;
+            margin-top: 25px;
+        }
+
+        .sidebar h4:first-child {
+            margin-top: 0;
+        }
+
+        .list-group-item {
+            border: none;
+            border-radius: 0;
+            padding: 8px 15px;
+            background-color: transparent;
+            transition: all 0.3s;
+        }
+
+        .list-group-item:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: var(--secondary-color);
+            padding-left: 20px;
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            margin-top: 30px;
+        }
+
+        /* Responsive adjustments */
+        
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <a href="@Url.Action("Index", "Home")" class="brand">NHÀ SÁCH TRỰC TUYẾN</a>
+                </div>
+                <div class="col-md-6">
+                    <div class="user-actions">
+                        @if (Session["TaiKhoan"] == null)
+                        {
+                            <a href="@Url.Action("DangKy", "KhachHang")" class="btn btn-outline-primary btn-sm">Đăng ký</a>
+                            <a href="@Url.Action("DangNhap", "KhachHang")" class="btn btn-primary btn-sm">Đăng nhập</a>
+                        }
+                        else
+                        {
+                            <span class="user-greeting">Xin chào, <strong>@Session["TenKhachHang"]</strong>!</span>
+                            <a href="@Url.Action("DangXuat", "KhachHang")" class="btn btn-warning btn-sm">Đăng xuất</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container body-content">
+        <div class="row">
+            <aside class="col-lg-3 col-md-4">
+                <div class="sidebar">
+
+
+                    <h4>CHỦ ĐỀ SÁCH</h4>
+                    <div class="list-group">
+                        @{ Html.RenderAction("ChuDePartial", "Layout"); }
+                    </div>
+
+                    <h4>NHÀ XUẤT BẢN</h4>
+                    <div class="list-group">
+                        @{ Html.RenderAction("NxbPartial", "Layout"); }
+                    </div>
+                    <h4>TÌM KIẾM NÂNG CAO</h4>
+                    <div>
+                        @{ Html.RenderAction("TimKiemPartial", "TimKiem"); }
+                    </div>
+                </div>
+            </aside>
+
+            <section class="col-lg-9 col-md-8">
+                @RenderBody()
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container text-center">
+            <p>&copy; @DateTime.Now.Year - Đồ án Lập trình Web - QLSach</p>
+        </div>
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
