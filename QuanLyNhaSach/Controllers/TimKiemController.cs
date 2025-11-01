@@ -18,26 +18,25 @@ namespace QuanLyNhaSach.Controllers
 
         public ActionResult KetQuaTimKiem(string sTuKhoa, string MaChuDe, List<string> gia)
         {
-            // 1. Lấy tất cả sách (dưới dạng IQueryable để lọc)
+            
             var ketQua = db.SACHes.AsQueryable();
 
-            // 2. Lọc theo Từ khóa (Tên sách)
+            
             if (!string.IsNullOrEmpty(sTuKhoa))
             {
                 ketQua = ketQua.Where(s => s.TENSACH.Contains(sTuKhoa));
             }
 
-            // 3. Lọc theo Chủ đề
+            
             if (!string.IsNullOrEmpty(MaChuDe))
             {
                 ketQua = ketQua.Where(s => s.MACHUDE == MaChuDe);
             }
 
-            // 4. Lọc theo Khoảng giá (Logic OR)
+            
             if (gia != null && gia.Count > 0)
             {
-                // === SỬA 1: BẮT ĐẦU BẰNG MỘT QUERY RỖNG TỪ DATABASE ===
-                // Dòng cũ (gây lỗi): var tempKetQua = Enumerable.Empty<SACH>().AsQueryable();
+                
                 var tempKetQua = db.SACHes.Where(s => false); // Dòng mới
 
                 foreach (var priceRange in gia)
@@ -60,18 +59,18 @@ namespace QuanLyNhaSach.Controllers
                     }
                 }
 
-                // === SỬA 3: GÁN KẾT QUẢ, KHÔNG CẦN '.Distinct()' VÌ 'Union' ĐÃ LÀM ===
+                
                 ketQua = tempKetQua;
             }
 
-            // Dòng này bây giờ sẽ chạy đúng
+            
             var listSach = ketQua.OrderBy(s => s.TENSACH).ToList();
 
-            // Lưu lại các tiêu chí tìm kiếm để hiển thị
+           
             ViewBag.TuKhoa = sTuKhoa;
             ViewBag.Gia = gia ?? new List<string>();
 
-            // Lấy Tên chủ đề để hiển thị
+            
             if (!string.IsNullOrEmpty(MaChuDe))
             {
                 ViewBag.TenChuDe = db.CHUDEs.Find(MaChuDe)?.TENCHUDE;
